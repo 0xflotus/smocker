@@ -1,42 +1,47 @@
-import * as React from "react";
 import {
+  PauseCircleFilled,
+  PlayCircleFilled,
+  PlusOutlined
+} from "@ant-design/icons";
+import {
+  Alert,
+  Button,
+  Drawer,
+  Empty,
+  Form,
+  PageHeader,
+  Pagination,
+  Row,
+  Spin,
+  Tag,
+  Typography
+} from "antd";
+import { DateTime, Settings } from "luxon";
+import * as React from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router";
+import { Link } from "react-router-dom";
+import { Dispatch } from "redux";
+import { Actions, actions } from "~modules/actions";
+import { AppState } from "~modules/reducers";
+import {
+  dateFormat,
+  Error,
+  Mock,
+  MockDynamicResponse,
+  MockRequest,
+  MockResponse,
+  Mocks
+} from "~modules/types";
+import {
+  extractMatcher,
   formQueryParams,
   toMultimap,
   toString,
-  extractMatcher,
   usePoll
 } from "~utils";
-import {
-  Mock,
-  MockResponse,
-  MockDynamicResponse,
-  MockRequest,
-  Mocks,
-  Error,
-  dateFormat
-} from "~modules/types";
-import { connect } from "react-redux";
-import { AppState } from "~modules/reducers";
-import { Dispatch } from "redux";
-import { Actions, actions } from "~modules/actions";
-import { withRouter, RouteComponentProps } from "react-router";
-import { Settings, DateTime } from "luxon";
-import { Link } from "react-router-dom";
-import {
-  Drawer,
-  Empty,
-  Button,
-  Icon,
-  PageHeader,
-  Pagination,
-  Alert,
-  Tag,
-  Row,
-  Spin,
-  Form
-} from "antd";
-import "./Mocks.scss";
 import Code from "./Code";
+import "./Mocks.scss";
 
 Settings.defaultLocale = "en-US";
 
@@ -139,10 +144,10 @@ const MockRequest = ({ request }: { request: MockRequest }) => {
             {methodMatcher && <strong>{methodMatcher + ": "}</strong>}
             {method}
           </Tag>
-          <span className="path">
+          <Typography.Text className="path" ellipsis>
             {pathMatcher && <strong>{pathMatcher + ": "}</strong>}
             {path + formQueryParams(request.query_params)}
-          </span>
+          </Typography.Text>
         </div>
       </div>
       {request.headers && (
@@ -197,33 +202,41 @@ const Mock = ({ mock }: { mock: Mock }) => {
 };
 
 const NewMock = ({
+  display,
   onSave,
   onClose
 }: {
+  display: boolean;
   onSave: (mocks: string) => void;
   onClose: () => void;
 }) => {
   const [mock, changeMock] = React.useState("");
-  const handleSubmit = (event: React.MouseEvent) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     onSave(mock);
   };
-  const handleCancel = (event: React.MouseEvent) => {
-    event.preventDefault();
-    onClose();
-  };
   return (
-    <>
+    <Drawer
+      title="Add new mocks"
+      placement="right"
+      className="drawer"
+      closable={false}
+      onClose={onClose}
+      visible={display}
+      width="70vw"
+      getContainer={false}
+      footer={
+        <div className="action buttons">
+          <Button onClick={onClose}>Cancel</Button>
+          <Button onClick={handleSubmit} type="primary">
+            Save
+          </Button>
+        </div>
+      }
+    >
       <Form className="form">
         <Code value={mock} language="yaml" onBeforeChange={changeMock} />
       </Form>
-      <div className="action buttons">
-        <Button onClick={handleCancel}>Cancel</Button>
-        <Button onClick={handleSubmit} type="primary">
-          Save
-        </Button>
-      </div>
-    </>
+    </Drawer>
   );
 };
 
@@ -287,12 +300,7 @@ const Mocks = ({
       setPageSize(ps);
     };
     const pagination = (
-      <Row
-        type="flex"
-        justify="space-between"
-        align="middle"
-        className="container"
-      >
+      <Row justify="space-between" align="middle" className="container">
         <div>
           <Pagination
             hideOnSinglePage={filteredMocks.length <= minPageSize}
@@ -337,7 +345,7 @@ const Mocks = ({
             <div className="action buttons">
               <Button
                 type="primary"
-                icon="plus"
+                icon={<PlusOutlined />}
                 disabled={displayNewMock}
                 onClick={handleAddNewMock}
                 className="add-mocks-button"
@@ -348,11 +356,8 @@ const Mocks = ({
                 loading={loading && { delay: 300 }}
                 onClick={togglePolling}
                 type={polling ? "danger" : "default"}
+                icon={polling ? <PauseCircleFilled /> : <PlayCircleFilled />}
               >
-                <Icon
-                  type={polling ? "pause-circle" : "play-circle"}
-                  theme={"filled"}
-                />
                 Autorefresh
               </Button>
             </div>
@@ -372,21 +377,11 @@ const Mocks = ({
         </Spin>
       </PageHeader>
       {displayNewMock && (
-        <Drawer
-          title="Add new mocks"
-          placement="right"
-          className="drawer"
-          closable={false}
+        <NewMock
+          display={displayNewMock}
+          onSave={handleSaveNewMock(sessionID)}
           onClose={handleCancelNewMock}
-          visible={displayNewMock}
-          width="70vw"
-          getContainer={false}
-        >
-          <NewMock
-            onSave={handleSaveNewMock(sessionID)}
-            onClose={handleCancelNewMock}
-          />
-        </Drawer>
+        />
       )}
     </div>
   );

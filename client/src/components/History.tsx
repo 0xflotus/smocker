@@ -1,8 +1,12 @@
 import {
+  PartitionOutlined,
+  PauseCircleFilled,
+  PlayCircleFilled
+} from "@ant-design/icons";
+import {
   Alert,
   Button,
   Empty,
-  Icon,
   PageHeader,
   Pagination,
   Row,
@@ -31,9 +35,9 @@ const Entry = React.memo(({ value }: { value: Entry }) => (
     <div className="request">
       <div className="details">
         <Tag color="blue">{value.request.method}</Tag>
-        <span className="path">
+        <Typography.Text className="path" ellipsis>
           {value.request.path + formQueryParams(value.request.query_params)}
-        </span>
+        </Typography.Text>
         <span className="date">
           {DateTime.fromISO(value.request.date).toFormat(dateFormat)}
         </span>
@@ -160,12 +164,7 @@ const History = ({
       setPageSize(ps);
     };
     const pagination = (
-      <Row
-        type="flex"
-        justify="space-between"
-        align="middle"
-        className="container"
-      >
+      <Row justify="space-between" align="middle" className="container">
         <div>
           <Pagination
             hideOnSinglePage={historyEntry.length <= minPageSize}
@@ -206,7 +205,7 @@ const History = ({
             <div className="action buttons">
               <Button
                 type="primary"
-                icon="eye"
+                icon={<PartitionOutlined />}
                 className="visualize-button"
                 onClick={onVisualize}
               >
@@ -216,11 +215,8 @@ const History = ({
                 loading={loading && { delay: 300 }}
                 onClick={togglePolling}
                 type={polling ? "danger" : "default"}
+                icon={polling ? <PauseCircleFilled /> : <PlayCircleFilled />}
               >
-                <Icon
-                  type={polling ? "pause-circle" : "play-circle"}
-                  theme={"filled"}
-                />
                 Autorefresh
               </Button>
             </div>

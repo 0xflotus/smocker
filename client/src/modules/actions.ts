@@ -33,6 +33,12 @@ const fetchHistory = createAsyncAction(
   "@APP/HISTORY/FETCH/FAILURE"
 )<string, History, Error>();
 
+const visualizeHistory = createAsyncAction(
+  "@APP/HISTORY/VISUALIZE",
+  "@APP/HISTORY/VISUALIZE/SUCCESS",
+  "@APP/HISTORY/VISUALIZE/FAILURE"
+)<string, string, Error>();
+
 const fetchMocks = createAsyncAction(
   "@APP/MOCKS/FETCH",
   "@APP/MOCKS/FETCH/SUCCESS",
@@ -62,6 +68,7 @@ export const actions = {
   selectSession,
   uploadSessions,
   fetchHistory,
+  visualizeHistory,
   fetchMocks,
   addMocks,
   reset

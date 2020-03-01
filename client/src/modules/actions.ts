@@ -37,7 +37,7 @@ const visualizeHistory = createAsyncAction(
   "@APP/HISTORY/VISUALIZE",
   "@APP/HISTORY/VISUALIZE/SUCCESS",
   "@APP/HISTORY/VISUALIZE/FAILURE"
-)<string, string, Error>();
+)<{ sessionID: string; src: string; dest: string }, string, Error>();
 
 const fetchMocks = createAsyncAction(
   "@APP/MOCKS/FETCH",

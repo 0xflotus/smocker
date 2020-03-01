@@ -129,7 +129,7 @@ const visualizeHistoryEpic: Epic<Actions> = action$ =>
   action$.pipe(
     filter(isActionOf(visualizeHistory.request)),
     exhaustMap(action => {
-      const query = action.payload ? `?session=${action.payload}` : "";
+      const query = `?session=${action.payload.sessionID}&src=${action.payload.src}&dest=${action.payload.dest}`;
       return ajax.get(trimedPath + "/history/visualize" + query).pipe(
         map(({ response }) => {
           return visualizeHistory.success(response.message);

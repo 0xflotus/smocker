@@ -7,11 +7,29 @@
     padding: 1em 2em 0;
   }
 
+  .no-margin {
+    margin: 0;
+  }
+
+  .collapse {
+    margin-bottom: 1em;
+    font-size: 12px;
+    &,
+    .collapse-panel {
+      border: none;
+      background-color: transparent;
+      .ant-row.ant-form-item {
+        margin-right: 0.5em;
+        margin-bottom: 0;
+      }
+    }
+  }
+
   .container {
     position: relative;
     .card {
       width: 100%;
-      .mermaid {
+      .mermaid div:first-child {
         display: flex;
         align-items: center;
         flex-direction: column;

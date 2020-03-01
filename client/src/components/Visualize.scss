@@ -27,14 +27,7 @@
 
   .container {
     position: relative;
-    .card {
-      width: 100%;
-      .mermaid div:first-child {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-      }
-    }
+    display: block;
 
     .absolute {
       position: absolute;

@@ -125,7 +125,7 @@ const Visualize = ({ sessionID, graph, visualize, history }: Props) => {
             </Form>
           </Collapse.Panel>
         </Collapse>
-        <Row justify="center" align="middle" className="container">
+        <Row className="container">
           {!emptyDiagram && (
             <Card className={"card"}>
               <Mermaid name="diagram" chart={diagram} />
